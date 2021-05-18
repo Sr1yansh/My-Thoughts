@@ -4,7 +4,7 @@ const exphbs = require('express-handlebars');
 const port = 5000;
 const mongoose = require('mongoose');
 const bodyParser =require('body-parser');
-
+const methodOverride = require('method-override');
 
 // Map global promise -  get rid of warning
 mongoose.Promise = global.Promise; 
@@ -29,6 +29,10 @@ app.set('view engine', 'handlebars');
 //Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+
+//Method override middleware
+app.use(methodOverride('_method'));
 
 
 app.get('/',(req,res)=> {
@@ -108,6 +112,23 @@ app.post('/ideas', (req, res) => {
   }
 });
 
+
+//Edit form process
+app.put('/ideas/:id', (req, res) => {
+   Idea.findOne({
+     id: req.params.id
+   })
+   .then(idea => {
+     //new values
+     idea.title = req.body.title
+     idea.details = req.body.details
+
+     idea.save()
+      .then(idea => {
+        res.redirect('/ideas')
+      })
+   })
+});
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
