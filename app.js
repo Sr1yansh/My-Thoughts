@@ -8,10 +8,16 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session');
 const path = require('path');
+const passport = require('passport')
+
 
 //Load Routes
 const ideas = require('./routes/ideas');
 const users = require('./routes/users');
+
+
+//Passport Config
+require('./config/passport')(passport);
 
 
 // Map global promise -  get rid of warning
